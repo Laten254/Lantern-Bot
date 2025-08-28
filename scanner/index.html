@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lantern-Bot QR Scanner</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(circle at top, #0f172a, #000);
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .scanner-container {
+      text-align: center;
+      background: rgba(15, 23, 42, 0.85);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(0, 255, 200, 0.6);
+      backdrop-filter: blur(10px);
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+      color: #38bdf8;
+      text-shadow: 0 0 15px #0ea5e9;
+    }
+    #reader {
+      width: 300px;
+      margin: 20px auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.7);
+    }
+    #result {
+      margin-top: 20px;
+      padding: 10px;
+      background: #1e293b;
+      border-radius: 10px;
+      color: #10b981;
+      font-weight: bold;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: linear-gradient(90deg, #0ea5e9, #06b6d4);
+      color: white;
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.6);
+      transition: 0.3s;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #06b6d4, #0ea5e9);
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.9);
+    }
+  </style>
+</head>
+<body>
+  <div class="scanner-container">
+    <h1>Lantern-Bot QR Scanner</h1>
+    <div id="reader"></div>
+    <div id="result">Scan a QR to connect Lantern-Bot</div>
+    <button onclick="copyResult()">Copy Result</button>
+  </div>
+
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script>
+    function onScanSuccess(decodedText) {
+      document.getElementById('result').innerText = `✅ Scanned: ${decodedText}`;
+      window.scannedCode = decodedText;
+    }
+
+    function onScanError(errorMessage) {
+      console.warn(errorMessage);
+    }
+
+    let html5QrcodeScanner = new Html5QrcodeScanner(
+      "reader", { fps: 10, qrbox: 250 }
+    );
+    html5QrcodeScanner.render(onScanSuccess, onScanError);
+
+    function copyResult() {
+      if (window.scannedCode) {
+        navigator.clipboard.writeText(window.scannedCode);
+        alert("Copied to clipboard!");
+      } else {
+        alert("No code scanned yet!");
+      }
+    }
+  </script>
+</body>
+</html>
